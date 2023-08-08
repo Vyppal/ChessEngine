@@ -8,8 +8,11 @@ struct GameState {
   double blackTime;
   bool whiteCastleRights;
   bool blackCastleRights;
+  bool whiteShortCastleRights;
+  bool blackShortCastleRights;
+  bool whiteLongCastleRights;
+  bool blackLongCastleRights;
 };
-
 
 enum Pieces {
   white_pawn,
@@ -27,14 +30,7 @@ enum Pieces {
   empty
 };
 
-
-
-
-
-
-
 class GameHandler {
-
  public:
 
   GameState GetGameState(){
@@ -42,8 +38,10 @@ class GameHandler {
       board,
       whiteTime,
       blackTime,
-      whiteCastleRights,
-      blackCastleRights
+      whiteShortCastleRights,
+      blackShortCastleRights,
+      whiteLongCastleRights,
+      blackLongCastleRights
     };
 };
 
@@ -79,6 +77,8 @@ class GameHandler {
 
   double whiteTime = timeControl;
   double blackTime = timeControl;
-  bool whiteCastleRights = true;
-  bool blackCastleRights = true;
+  bool whiteShortCastleRights = true;
+  bool blackShortCastleRights = true;
+  bool whiteLongCastleRights = true;
+  bool blackLongCastleRights = true;
 };
