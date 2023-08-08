@@ -26,13 +26,3 @@ jobs:
     - run: mkdir target
     - name: Build
       run: make
-
-  MacOS-Build:
-
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - run: mkdir target
-    - name: Build
-      run: make
