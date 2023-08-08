@@ -11,22 +11,6 @@ struct GameState {
 }
 
 
-enum Pieces {
-  white_pawn,
-  white_knight,
-  white_bishop,
-  white_rook,
-  white_queen,
-  white_king,
-  black_pawn
-  black_knight,
-  black_bishop,
-  black_rook,
-  black_queen,
-  black_king,
-  empty
-}
-
 
 
 
@@ -80,3 +64,34 @@ class GameHandler {
   bool whiteCastleRights = true;
   bool blackCastleRights = true;
 }
+
+
+
+/*
+
+recieve move in tile from, tile to, additional flag format
+once recieved move
+  determine if move is legal
+    if not legal:
+      lose game
+    update game board
+
+
+updating game board
+  set new tile and old tile type
+  set tiles to "white targetted" or "black targetted" or both
+
+    
+
+determining if move is legal
+  if king on target square
+
+
+
+*/
+
+
+/*
+each piece has a piece id
+
+*/
