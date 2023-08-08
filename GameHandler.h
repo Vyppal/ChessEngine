@@ -3,11 +3,13 @@
 double timeControl = 120;
 
 struct GameState {
-  std::vector<char> boardLayout;
+  char[64] boardLayout;
   double whiteTime;
   double blackTime;
-  bool whiteCastleRights;
-  bool blackCastleRights;
+  bool whiteCastleKingside;
+  bool whiteCastleQueenside;
+  bool blackCastleKingSide;
+  bool blackCastleQueenside;
 }
 
 
@@ -42,8 +44,10 @@ class GameHandler {
       board,
       whiteTime,
       blackTime,
-      whiteCastleRights,
-      blackCastleRights
+      whiteCastleKingside,
+      whiteCastleQueenside,
+      blackCastleKingside,
+      blackCastleQueenside
     }
   }
 
@@ -54,7 +58,7 @@ class GameHandler {
   // lichess api
 
  private:
-  std::vector<char> board = {
+  char[64] board = {
   /* a    b    c    d    e    f    g    h*/
     'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r', /* 8 */
     'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', /* 7 */
@@ -77,6 +81,8 @@ class GameHandler {
   }
   double whiteTime = timeControl;
   double blackTime = timeControl;
-  bool whiteCastleRights = true;
-  bool blackCastleRights = true;
+  bool whiteCastleKingside = true;
+  bool whiteCastleQueenside = true;
+  bool blackCastleKingside = true;
+  bool blackCastleQueenside = true;
 }
