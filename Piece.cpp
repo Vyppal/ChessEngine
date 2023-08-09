@@ -3,7 +3,11 @@
 #include <algorithm>
 
 
+/*
+UNFINISHED!
 
+gets every square the piece can move to assuming board is empty
+*/
 std::vector<PiecePosition> GetMoveset(int fileNum, int rankNum, Pieces pieceType, bool isWhite=true) {
   // std::vector<PiecePosition> 
   // switch (pieceType) {
@@ -25,7 +29,7 @@ std::vector<PiecePosition> GetMoveset(int fileNum, int rankNum, Pieces pieceType
         allMoves.push_back({(fileNum - i) % 8, (rankNum - i) % 8});
         allMoves.push_back({(fileNum - (8-i)) % 8, (rankNum - i) % 8});
       }
-      
+
   }
   
 };
