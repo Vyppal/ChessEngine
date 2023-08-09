@@ -1,25 +1,20 @@
 #include <vector>
 
+#include "Piece.h"
+
 double timeControl = 120;
 
 struct GameState {
-  std::vector<char> boardLayout;
+  Pieces boardLayout[64];
   double whiteTime;
   double blackTime;
   bool whiteCastleRights;
   bool blackCastleRights;
-}
-
-
-
-
-
-
-
+};
 
 class GameHandler {
-
  public:
+  GameHandler();
 
   GameState GetGameState(){
     return GameState{
@@ -29,7 +24,7 @@ class GameHandler {
       whiteCastleRights,
       blackCastleRights
     }
-  }
+  };
 
   void RecieveMove() {}
 
@@ -38,18 +33,19 @@ class GameHandler {
   // lichess api
 
  private:
-  std::vector<char> board = {
-  /* a    b    c    d    e    f    g    h*/
-    'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r', /* 8 */
-    'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', /* 7 */
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 6 */
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 5 */
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 4 */
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 3 */
-    'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', /* 2 */
-    'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'  /* 1 */
-  }
-  board = {
+  // std::vector<char> board = {
+  // /* a    b    c    d    e    f    g    h*/
+  //   'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r', /* 8 */
+  //   'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', /* 7 */
+  //   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 6 */
+  //   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 5 */
+  //   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 4 */
+  //   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', /* 3 */
+  //   'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', /* 2 */
+  //   'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'  /* 1 */
+  // };
+  //a
+  std::vector<Pieces> board = {
     Pieces::black_rook, Pieces::black_knight, Pieces::black_bishop, Pieces::black_queen, Pieces::black_king, Pieces::black_bishop, Pieces::black_knight, Pieces::black_rook,
     Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn,
     Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
@@ -58,7 +54,7 @@ class GameHandler {
     Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
     Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, 
     Pieces::white_rook, Pieces::white_knight, Pieces::white_bishop, Pieces::white_queen, Pieces::white_king, Pieces::white_bishop, Pieces::white_knight, Pieces::white_rook
-  }
+  };
   double whiteTime = timeControl;
   double blackTime = timeControl;
   bool whiteCastleRights = true;
