@@ -1,3 +1,5 @@
 *.exe
-*.cpp
-*.hpp
+*.out
+*.gch
+*.h.gch
+/target
