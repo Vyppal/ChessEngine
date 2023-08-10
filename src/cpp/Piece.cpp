@@ -1,7 +1,4 @@
-#include "Piece.h"
-#include <iostream>
-#include <algorithm>
-
+#include "Piece.hpp"
 
 /*
 UNFINISHED!

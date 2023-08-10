@@ -2,3 +2,4 @@
 *.out
 *.gch
 *.h.gch
+/target
