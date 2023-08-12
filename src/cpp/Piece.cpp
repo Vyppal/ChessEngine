@@ -75,20 +75,15 @@ std::vector<PiecePosition> GetMoveset(int fileNum, int rankNum, Pieces pieceType
 
 // id must be 1-32 inclusive
 Piece::Piece(int id) : _id(id) {
-  int pawnRank = 7;
-  int pieceRank = 8;
-  if (_id <= 16) {
-    pawnRank = 2;
-    pieceRank = 1;
-  }
+  int a = (id-1) / 8;
+  int b = (id - 1) / 16;
+  int rankNumber = 8 + (2*a - 7 - 2*b) * b - a;
   int moduloedID = (_id - 1) % 16;
   _pos.SetFile(_pos.files[(_id - 1) % 8]);
+  _pos.SetRank(rankNumber);
   if (moduloedID >= 9) {
     _pieceType = Pieces::pawn;
-    _pos.SetRank(pawnRank);
   } else {
-    _pos.SetRank(pieceRank);
-
     if (moduloedID == 0 || moduloedID == 7) {
       _pieceType = Pieces::rook;
     } else if (moduloedID == 1 || moduloedID == 6) {
@@ -101,10 +96,9 @@ Piece::Piece(int id) : _id(id) {
       _pieceType = Pieces::king;
     }
   }
+  moveSet = GetMoveset((_id - 1) % 8, rankNumber, _pieceType, b == 1);
 }
 
-
-// PiecePosition::PiecePosition() {}
 PiecePosition::PiecePosition(char fileChar, int rankNum): _file(fileChar), _rank(rankNum) {}
 
 void PiecePosition::SetFile(char file) {
@@ -128,8 +122,6 @@ int PiecePosition::FindFileIndex(char fileChar) {
   return -1;
 }
 
-
-
 void PiecePosition::Translate(int filesTranslated, int ranksTranslated) {
   _file = files[(FindFileIndex(_file) + filesTranslated) % 8];
   _rank = (_rank + ranksTranslated) % 8;
@@ -142,8 +134,8 @@ void Piece::MovePiece(PiecePosition newPos) {
   int fileTranslate = newPos.FindFileIndex(newPos._file) - prevPos.FindFileIndex(prevPos._file);
   int rankTranslate = newPos._rank - prevPos._rank;
 
-  int targetableTilesSize = sizeof(moveset);
+  int targetableTilesSize = sizeof(moveSet);
   for (int i = 0 ; i < targetableTilesSize; i++) {
-    targetableTiles[i].Translate(fileTranslate, rankTranslate);
+    moveSet[i].Translate(fileTranslate, rankTranslate);
   }
 }

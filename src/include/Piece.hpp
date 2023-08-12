@@ -39,6 +39,7 @@ class Piece {
   PiecePosition GetPosition();
 
   void MovePiece(PiecePosition newPos);
+  // void UpdateMoveSet(); // is actually taken care of in MovePiece
 
  private:
   int _id;
@@ -46,7 +47,7 @@ class Piece {
   PiecePosition _pos{'a', 1};
   bool hasMoved = false;
   // assuming and empty board, the tiles the piece can attack
-  std::vector<PiecePosition> moveset;
+  std::vector<PiecePosition> moveSet;
   std::vector<PiecePosition> allowedMoves;
 
 };
