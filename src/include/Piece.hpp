@@ -17,7 +17,7 @@ enum Pieces {
 
 class PiecePosition {
  public:
-  PiecePosition(char fileNum, int rankNum);
+  PiecePosition(char fileChar, int rankNum);
 
   void SetFile(char file);
   void SetRank(int rank);
@@ -25,7 +25,7 @@ class PiecePosition {
   void Translate(int filesTranslated, int ranksTranslated);
   int FindFileIndex(char fileChar);
 
-  const char files[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+  static constexpr char files[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
   char _file;
   int _rank;
 

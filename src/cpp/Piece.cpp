@@ -5,30 +5,72 @@ UNFINISHED!
 
 gets every square the piece can move to assuming board is empty
 */
-std::vector<PiecePosition> GetMoveset(int fileNum, int rankNum, Pieces pieceType, bool isWhite=true) {
-  // std::vector<PiecePosition> 
-  // switch (pieceType) {
-  //   case white_pawn:
-  //     if (fileNum)
-  // };
-  // return {};
+std::vector<PiecePosition> ConvertAndTrimMoves(std::vector<std::vector<int>> moves) {
+  std::vector<PiecePosition> outputMoves;
+  for (auto move : moves) {
+    if (move[0] < 1) continue;
+    if (move[1] < 1) continue;
+    if (move[0] > 8) continue;
+    if (move[1] > 8) continue;
+    outputMoves.push_back(PiecePosition{PiecePosition::files[move[0] - 1], move[1]});
+  }
+  return outputMoves;
+}
 
+std::vector<PiecePosition> GetMoveset(int fileNum, int rankNum, Pieces pieceType, bool isWhite=true) {
   std::vector<std::vector<int>> allMoves;
   switch (pieceType) {
     case Pieces::pawn:
-      if (isWhite) {
-      }
-      break;
+      {
+        int advanceRank;
+        if (isWhite) {
+          advanceRank = rankNum + 1;
+          if (rankNum == 2) {   allMoves.push_back({fileNum, rankNum + 2});   }
+        } else {
+          advanceRank = rankNum - 1;
+          if (rankNum == 7) {   allMoves.push_back({fileNum, rankNum - 2});   }
+        }
+        allMoves.push_back({fileNum, advanceRank});
+        allMoves.push_back({fileNum - 1, advanceRank});
+        allMoves.push_back({fileNum + 1, advanceRank});
+      } break;
     case Pieces::knight:
+      allMoves.push_back({fileNum - 2, rankNum - 1});
+      allMoves.push_back({fileNum - 2, rankNum + 1});
+      allMoves.push_back({fileNum - 1, rankNum - 2});
+      allMoves.push_back({fileNum - 1, rankNum + 2});
+      allMoves.push_back({fileNum + 1, rankNum - 2});
+      allMoves.push_back({fileNum + 1, rankNum + 2});
+      allMoves.push_back({fileNum + 2, rankNum - 1});
+      allMoves.push_back({fileNum + 2, rankNum + 1});
       break;
+    case Pieces::queen:
+      [[fallthrough]]
     case Pieces::bishop:
       for (int i = 1; i < 8; i++) {
         allMoves.push_back({(fileNum - i) % 8, (rankNum - i) % 8});
         allMoves.push_back({(fileNum - (8-i)) % 8, (rankNum - i) % 8});
       }
-
+      if (pieceType != Pieces::queen) break;
+      [[fallthrough]]
+    case Pieces::rook:
+      for (int i = 1; i < 8; i++) {
+        allMoves.push_back({(fileNum - i) % 8, rankNum});
+        allMoves.push_back({fileNum, (rankNum - i) % 8});
+      }
+      break;
+    case Pieces::king:
+      allMoves.push_back({fileNum - 1, rankNum - 1});
+      allMoves.push_back({fileNum - 1, rankNum});
+      allMoves.push_back({fileNum - 1, rankNum + 1});
+      allMoves.push_back({fileNum, rankNum - 1});
+      allMoves.push_back({fileNum, rankNum + 1});
+      allMoves.push_back({fileNum + 1, rankNum - 1});
+      allMoves.push_back({fileNum + 1, rankNum});
+      allMoves.push_back({fileNum + 1, rankNum + 1});
+      break;
   }
-  
+  return ConvertAndTrimMoves(allMoves);
 };
 
 // id must be 1-32 inclusive
