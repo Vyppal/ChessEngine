@@ -17,19 +17,18 @@ std::vector<PiecePosition> ConvertAndTrimMoves(std::vector<std::vector<int>> mov
   return outputMoves;
 }
 
-std::vector<PiecePosition> GetMoveset(int fileNum, int rankNum, Pieces pieceType, bool isWhite=true) {
+std::vector<PiecePosition> Pieces::GetMoveset() {
   std::vector<std::vector<int>> allMoves;
-  switch (pieceType) {
+  bool isWhite = (id >= 16);
+  switch (_pieceType) {
     case Pieces::pawn:
       {
-        int advanceRank;
+        int directionalMultiplier = -1;
         if (isWhite) {
-          advanceRank = rankNum + 1;
-          if (rankNum == 2) {   allMoves.push_back({fileNum, rankNum + 2});   }
-        } else {
-          advanceRank = rankNum - 1;
-          if (rankNum == 7) {   allMoves.push_back({fileNum, rankNum - 2});   }
+          directionalMultiplier = 1;
         }
+        advanceRank = rankNum + 1 * directionalMultiplier;
+        if (!hasMoved) {   allMoves.push_back({fileNum, rankNum + 2 * directionalMultiplier});   }
         allMoves.push_back({fileNum, advanceRank});
         allMoves.push_back({fileNum - 1, advanceRank});
         allMoves.push_back({fileNum + 1, advanceRank});
@@ -96,7 +95,8 @@ Piece::Piece(int id) : _id(id) {
       _pieceType = Pieces::king;
     }
   }
-  moveSet = GetMoveset((_id - 1) % 8, rankNumber, _pieceType, b == 1);
+  // moveSet = GetMoveset((_id - 1) % 8, rankNumber, _pieceType, b == 1);
+  moveSet = GetMoveset();
 }
 
 PiecePosition::PiecePosition(char fileChar, int rankNum): _file(fileChar), _rank(rankNum) {}
@@ -122,6 +122,15 @@ int PiecePosition::FindFileIndex(char fileChar) {
   return -1;
 }
 
+int PiecePosition::FindFileIndex() {
+  for (int i = 0; i < 8; i++) {
+    if (fileChar == _file) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 void PiecePosition::Translate(int filesTranslated, int ranksTranslated) {
   _file = files[(FindFileIndex(_file) + filesTranslated) % 8];
   _rank = (_rank + ranksTranslated) % 8;
@@ -137,5 +146,88 @@ void Piece::MovePiece(PiecePosition newPos) {
   int targetableTilesSize = sizeof(moveSet);
   for (int i = 0 ; i < targetableTilesSize; i++) {
     moveSet[i].Translate(fileTranslate, rankTranslate);
+  }
+}
+
+/*
+	if not king
+		check if in same file/rank/diagonal with king
+		check if any piece between king and piece
+		check if being attacked from any enemy piece along that shared line
+	if not knight nor pawn nor king
+		get moveset
+		if not rook
+			file num bigger, rank num bigger
+			file num smaller, rank num bigger
+			file num bigger, rank num smaller
+			file num smaller, rank num smaller
+		else if rook or queen or king
+			file num bigger
+			file num smaller
+			rank num bigger
+			rank num smaller
+		if king
+			check both rooks
+				if not moved
+				if no pieces in the way
+				if no enemy attackers
+				add castling
+	else
+		check if can move there based on the piece
+*/
+
+
+void Piece::UpdateMoves() {
+  if (_pieceType != Pieces::king) {
+		// check if in same file/rank/diagonal with king
+		// check if any piece between king and piece
+		// check if being attacked from any enemy piece along that shared line
+  }
+
+  if (_pieceType != Pieces::knight && _pieceType != Pieces::pawn && _pieceType != Pieces::king) {
+    std::vector<PiecePosition> currentMoves = GetMoveset();
+    std::vector<std::vector<PiecePosition>> directionalMoves;
+    directionalMoves.push_back({});
+    directionalMoves.push_back({});
+    directionalMoves.push_back({});
+    directionalMoves.push_back({});
+    if (_pieceType == Pieces::rook) {
+      for (PiecePosition pos : currentMoves) {
+        if (pos.FindFileIndex() > _pos.FindFileIndex()) { directionalMoves[0].push_back(pos); }
+        else if (pos.FindFileIndex() < _pos.FindFileIndex()) { directionalMoves[1].push_back(pos); }
+        else if (pos._rank > _pos._rank) { directionalMoves[2].push_back(pos); }
+        else if (pos._rank < _pos._rank) { directionalMoves[3].push_back(pos); }
+      }
+    } else if (_pieceType == Pieces::bishop) {
+      for (PiecePosition pos : currentMoves) {
+        if (pos.FindFileIndex() > _pos.FindFileIndex()) {
+          if (pos._rank > _pos._rank) { directionalMoves[0].push_back(pos); }
+          else if (pos._rank < _pos._rank) { directionalMoves[1].push_back(pos); }
+        }
+        else if (pos.FindFileIndex() < _pos.FindFileIndex()) {
+          if (pos._rank > _pos._rank) { directionalMoves[2].push_back(pos); }
+          else if (pos._rank < _pos._rank) { directionalMoves[3].push_back(pos); }
+        }
+      }
+    } else if (_pieceType == Pieces::queen) {
+      directionalMoves.push_back({});
+      directionalMoves.push_back({});
+      directionalMoves.push_back({});
+      directionalMoves.push_back({});
+      for (PiecePosition pos : currentMoves) {
+        if (pos.FindFileIndex() > _pos.FindFileIndex()) {
+          if (pos._rank > _pos._rank) { directionalMoves[0].push_back(pos); }
+          else if (pos._rank < _pos._rank) { directionalMoves[1].push_back(pos); }
+          directionalMoves[2].push_back(pos);
+        }
+        else if (pos.FindFileIndex() < _pos.FindFileIndex()) {
+          if (pos._rank > _pos._rank) { directionalMoves[3].push_back(pos); }
+          else if (pos._rank < _pos._rank) { directionalMoves[4].push_back(pos); }
+          directionalMoves[5].push_back(pos);
+        }
+        else if (pos._rank > _pos._rank) { directionalMoves[6].push_back(pos); }
+        else if (pos._rank < _pos._rank) { directionalMoves[7].push_back(pos); }
+      }
+    }
   }
 }

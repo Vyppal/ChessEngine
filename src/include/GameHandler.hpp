@@ -66,7 +66,7 @@ class GameHandler {
   //   'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'  /* 1 */
   // }; dunno what this was meant to be
 
-  std::vector<char> board = {
+  std::vector<Piece> board = {
     Pieces::black_rook, Pieces::black_knight, Pieces::black_bishop, Pieces::black_queen, Pieces::black_king, Pieces::black_bishop, Pieces::black_knight, Pieces::black_rook,
     Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn,
     Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,

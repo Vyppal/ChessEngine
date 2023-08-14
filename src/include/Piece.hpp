@@ -24,6 +24,7 @@ class PiecePosition {
 
   void Translate(int filesTranslated, int ranksTranslated);
   int FindFileIndex(char fileChar);
+  int FindFileIndex();
 
   static constexpr char files[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
   char _file;
@@ -38,7 +39,12 @@ class Piece {
   Piece(int id);
   PiecePosition GetPosition();
 
+
+  std::vector<PiecePosition> GetMoveset();
+
+  void UpdateBoard(std::vector<Piece> board);
   void MovePiece(PiecePosition newPos);
+  void UpdateMoves();
   // void UpdateMoveSet(); // is actually taken care of in MovePiece
 
  private:
@@ -50,4 +56,14 @@ class Piece {
   std::vector<PiecePosition> moveSet;
   std::vector<PiecePosition> allowedMoves;
 
+  std::vector<Piece> _board = {
+    Pieces::black_rook, Pieces::black_knight, Pieces::black_bishop, Pieces::black_queen, Pieces::black_king, Pieces::black_bishop, Pieces::black_knight, Pieces::black_rook,
+    Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn,
+    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
+    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
+    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
+    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
+    Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, 
+    Pieces::white_rook, Pieces::white_knight, Pieces::white_bishop, Pieces::white_queen, Pieces::white_king, Pieces::white_bishop, Pieces::white_knight, Pieces::white_rook
+  };
 };
