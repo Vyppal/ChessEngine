@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 
 enum Pieces {
   pawn,
@@ -14,17 +15,21 @@ enum Pieces {
   empty
 };
 
+enum Colour {   empty = -5, black = 0, white = 1   };
 
 class PiecePosition {
  public:
-  PiecePosition(char fileChar, int rankNum);
+  PiecePosition();
 
   void SetFile(char file);
   void SetRank(int rank);
 
   void Translate(int filesTranslated, int ranksTranslated);
+  PiecePosition GetTranslatedPos(int filesTranslated, int ranksTranslated);
   int FindFileIndex(char fileChar);
   int FindFileIndex();
+
+  int GetBoardIndex();
 
   static constexpr char files[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
   char _file;
@@ -36,34 +41,76 @@ class PiecePosition {
 
 class Piece {
  public:
-  Piece(int id);
+  Piece();
   PiecePosition GetPosition();
-
 
   std::vector<PiecePosition> GetMoveset();
 
   void UpdateBoard(std::vector<Piece> board);
   void MovePiece(PiecePosition newPos);
-  void UpdateMoves();
+  virtual void UpdateMoves(std::vector<Piece> board) override;
   // void UpdateMoveSet(); // is actually taken care of in MovePiece
 
+  Colour GetColour();
+
  private:
-  int _id;
+  Colour _colour;
+  PiecePosition _pos;
   Pieces _pieceType;
-  PiecePosition _pos{'a', 1};
   bool hasMoved = false;
   // assuming and empty board, the tiles the piece can attack
   std::vector<PiecePosition> moveSet;
   std::vector<PiecePosition> allowedMoves;
-
-  std::vector<Piece> _board = {
-    Pieces::black_rook, Pieces::black_knight, Pieces::black_bishop, Pieces::black_queen, Pieces::black_king, Pieces::black_bishop, Pieces::black_knight, Pieces::black_rook,
-    Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn,
-    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
-    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
-    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
-    Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
-    Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, Pieces::white_pawn, 
-    Pieces::white_rook, Pieces::white_knight, Pieces::white_bishop, Pieces::white_queen, Pieces::white_king, Pieces::white_bishop, Pieces::white_knight, Pieces::white_rook
-  };
 };
+
+
+class Empty : public Piece {
+ public:
+  Empty(Colour colour, PiecePosition startingPos);
+
+ private:
+
+}
+
+class Pawn : public Piece {
+ public:
+  Pawn(Colour colour, PiecePosition startingPos);
+
+  void UpdateMoves(std::vector<Piece> board);
+
+ private:
+  _pieceType = Pieces::pawn;
+};
+
+class Knight : public Piece {
+ public:
+  Knight(Colour colour, PiecePosition startingPos);
+
+ private:
+  _pieceType = Pieces::knight;
+};
+
+class Bishop : public Piece {
+ public:
+  Bishop(Colour colour, PiecePosition startingPos);
+
+ private:
+  _pieceType = Pieces::bishop;
+};
+
+class Queen : public Piece {
+ public:
+  Queen(Colour colour, PiecePosition startingPos);
+
+ private:
+  _pieceType = Pieces::queen;
+};
+
+class King : public Piece {
+ public:
+  King(Colour colour, PiecePosition startingPos);
+
+ private:
+  _pieceType = Pieces::king;
+};
+

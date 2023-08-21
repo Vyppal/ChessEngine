@@ -1,10 +1,6 @@
 #include "Piece.hpp"
 
-/*
-UNFINISHED!
 
-gets every square the piece can move to assuming board is empty
-*/
 std::vector<PiecePosition> ConvertAndTrimMoves(std::vector<std::vector<int>> moves) {
   std::vector<PiecePosition> outputMoves;
   for (auto move : moves) {
@@ -73,7 +69,7 @@ std::vector<PiecePosition> Pieces::GetMoveset() {
 };
 
 // id must be 1-32 inclusive
-Piece::Piece(int id) : _id(id) {
+Piece::Piece() {
   int a = (id-1) / 8;
   int b = (id - 1) / 16;
   int rankNumber = 8 + (2*a - 7 - 2*b) * b - a;
@@ -99,43 +95,6 @@ Piece::Piece(int id) : _id(id) {
   moveSet = GetMoveset();
 }
 
-PiecePosition::PiecePosition(char fileChar, int rankNum): _file(fileChar), _rank(rankNum) {}
-
-void PiecePosition::SetFile(char file) {
-  _file = file;
-}
-void PiecePosition::SetRank(int rank) {
-  _rank = rank;
-}
-
-PiecePosition Piece::GetPosition() {
-  return _pos;
-}
-
-
-int PiecePosition::FindFileIndex(char fileChar) {
-  for (int i = 0; i < 8; i++) {
-    if (fileChar == files[i]) {
-      return i;
-    }
-  }
-  return -1;
-}
-
-int PiecePosition::FindFileIndex() {
-  for (int i = 0; i < 8; i++) {
-    if (fileChar == _file) {
-      return i;
-    }
-  }
-  return -1;
-}
-
-void PiecePosition::Translate(int filesTranslated, int ranksTranslated) {
-  _file = files[(FindFileIndex(_file) + filesTranslated) % 8];
-  _rank = (_rank + ranksTranslated) % 8;
-}
-
 void Piece::MovePiece(PiecePosition newPos) {
   PiecePosition prevPos = _pos;
   _pos = newPos;
@@ -147,6 +106,10 @@ void Piece::MovePiece(PiecePosition newPos) {
   for (int i = 0 ; i < targetableTilesSize; i++) {
     moveSet[i].Translate(fileTranslate, rankTranslate);
   }
+}
+
+PiecePosition Piece::GetPosition() {
+  return _pos;
 }
 
 /*
@@ -176,6 +139,9 @@ void Piece::MovePiece(PiecePosition newPos) {
 		check if can move there based on the piece
 */
 
+Colour Piece::GetColour() {
+  return _colour;
+}
 
 void Piece::UpdateMoves() {
   if (_pieceType != Pieces::king) {
@@ -227,6 +193,89 @@ void Piece::UpdateMoves() {
         }
         else if (pos._rank > _pos._rank) { directionalMoves[6].push_back(pos); }
         else if (pos._rank < _pos._rank) { directionalMoves[7].push_back(pos); }
+      }
+    }
+  }
+}
+
+
+
+PiecePosition::PiecePosition() {}
+
+void PiecePosition::SetFile(char file) {
+  _file = file;
+}
+void PiecePosition::SetRank(int rank) {
+  _rank = rank;
+}
+
+int PiecePosition::FindFileIndex(char fileChar) {
+  for (int i = 0; i < 8; i++) {
+    if (fileChar == files[i]) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+int PiecePosition::FindFileIndex() {
+  for (int i = 0; i < 8; i++) {
+    if (files[i] == _file) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+void PiecePosition::Translate(int filesTranslated, int ranksTranslated) {
+  _file = files[(FindFileIndex(_file) + filesTranslated) % 8];
+  _rank = (_rank + ranksTranslated) % 8;
+}
+
+PiecePosition PiecePosition::GetTranslatedPos(int filesTranslated, int ranksTranslated) {
+  char file = files[(FindFileIndex(_file) + filesTranslated) % 8];
+  int rank = (_rank + ranksTranslated) % 8;
+  PiecePosition translatedPos;
+  translatedPos.SetFile(file);
+  translatedPos.SetRank(rank);
+  return translatedPos;
+}
+
+int PiecePosition::GetBoardIndex() {
+  return 63 - (FindFileIndex() + (_rank - 1) * 8);
+}
+
+Pawn::Pawn(Colour colour, PiecePosition startingPos) : _colour(colour), _pos(startingPos) {
+  _pos = startingPos;
+
+}
+
+void Pawn::UpdateMoves(std::vector<Piece> board, bool isKingPinned=false) {
+  if (isKingPinned) {   return;   }
+
+  int forwardDirection = _colour == Colour::white ? 1 : -1;
+  std::vector<PiecePosition> allMoves;
+  if (_pos._file != 'a') {
+    PiecePosition leftCapture = GetTranslatedPos(-1, forwardDirection);
+    int leftPieceColour = board[leftCapture.GetBoardIndex()].GetColour()
+    if (abs(1 - leftPieceColour) == 1) {
+      allMoves.push_back(leftCapture);
+    }
+  }
+  if (_pos._file != 'h') {
+    PiecePosition rightCapture = GetTranslatedPos(1, forwardDirection);
+    int rightPieceColour = board[rightCapture.GetBoardIndex()].GetColour()
+    if (abs(1 - rightPieceColour) == 1) {
+      allMoves.push_back(rightCapture);
+    }
+  }
+  PiecePosition forward1 = GetTranslatedPos(0, forwardDirection);
+  if (board[foward1.GetBoardIndex()].GetColour() == Piece::empty) {
+    allMoves.push_back(forward1);
+    if (!hasMoved) {
+      PiecePosition forward2 = GetTranslatedPos(0, forwardDirection * 2);
+      if (board[foward1.GetBoardIndex()].GetColour() == Piece::empty) {
+        allMoves.push_back(forward2);
       }
     }
   }
