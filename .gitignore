@@ -3,3 +3,7 @@
 *.gch
 *.h.gch
 /target
+
+/.vscode
+/.idea
+
