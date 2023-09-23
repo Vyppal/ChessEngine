@@ -2,18 +2,6 @@
 
 double timeControl = 120;
 
-struct GameState {
-  std::vector<char> boardLayout;
-  double whiteTime;
-  double blackTime;
-  bool whiteCastleRights;
-  bool blackCastleRights;
-  bool whiteShortCastleRights;
-  bool blackShortCastleRights;
-  bool whiteLongCastleRights;
-  bool blackLongCastleRights;
-};
-
 enum Pieces {
   white_pawn,
   white_knight,
@@ -29,8 +17,19 @@ enum Pieces {
   black_king,
   empty
 };
-
 // surely each piece should be a class which derives from a "piece class which has things like state"
+
+struct GameState {
+  std::vector<Pieces> boardLayout;
+  double whiteTime;
+  double blackTime;
+  bool whiteCastleRights;
+  bool blackCastleRights;
+  bool whiteShortCastleRights;
+  bool blackShortCastleRights;
+  bool whiteLongCastleRights;
+  bool blackLongCastleRights;
+};
 
 class GameHandler {
  public:
@@ -66,7 +65,7 @@ class GameHandler {
   //   'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'  /* 1 */
   // }; dunno what this was meant to be
 
-  std::vector<Piece> board = {
+  std::vector<Pieces> board = {
     Pieces::black_rook, Pieces::black_knight, Pieces::black_bishop, Pieces::black_queen, Pieces::black_king, Pieces::black_bishop, Pieces::black_knight, Pieces::black_rook,
     Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn, Pieces::black_pawn,
     Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty, Pieces::empty,
